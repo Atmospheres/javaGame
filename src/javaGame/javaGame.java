@@ -14,7 +14,7 @@ public class javaGame
 		float playerHealth = 30;
 		float playerMaxHealth = 30;
 		float playerOldHealth;
-		String playerLocation = "Atrium";
+		String playerLocation;
 		String assignClass;
 		String name = "Brad";
 		int fight;
@@ -26,13 +26,18 @@ public class javaGame
 		String enemySkillOne;
 		String enemySkillTwo;
 		String enemySkillThree;
+		String setEnemyClass;
 		int enemyArmor;
-		float enemyHealth;
+		float enemyHealth = 10;
 		float enemyOldHealth;
-		int enemyMAxHealth;
+		int enemyMaxHealth;
 		float healthChange;
 		int enemyChoice;
 		
+		Enemy enemy = new Enemy("Goblin", 1);
+		EnemyClass enemyClass = new EnemyClass("Bandit");
+		Action attack = new Action();
+		EnemyAction enemyAttack = new EnemyAction();
 		Scanner scanner = new Scanner(System.in);
 		while (gameActive == true) 
 		{
@@ -40,11 +45,14 @@ public class javaGame
 			System.out.println("what would you like to name your character?");
 			name = scanner.next();
 			Player player = new Player(name);
+			fight = 1;
+			playerLocation = "Atrium";
 			System.out.println("What Class would you like to be?");
 			System.out.println("1: Fighter");
 			System.out.println("2: Cleric");
 			System.out.println("3: Mage");
 			playerChoice = scanner.next().charAt(0);
+			
 			switch (playerChoice) 
 			{			
 				case '1':
@@ -65,7 +73,8 @@ public class javaGame
 			skillTwo = playerClass.SetSkillTwo();
 			skillThree = playerClass.SetSkillThree();
 			playerArmor = playerClass.SetPlayerArmor();
-			fight = 1;
+			playerMaxHealth = player.SetMaxHealth(30,0);
+			playerHealth = playerMaxHealth;
 			System.out.println("Type '0' at any time to check your status");
 			while (playerHealth > 0) 
 			{
@@ -148,21 +157,11 @@ public class javaGame
 								}
 								else if(fight == 2)
 								{
-									
+									System.out.println("Your second fight is against ");
 								}
-								else if(fight == 3)
-								{
-									
+								else if(fight >= 3)
+								{System.out.println("Your fight will be tough");
 								}
-								else if(fight == 4)
-								{
-									
-								}
-								else if(fight == 5)
-								{
-									
-								}
-								
 								break;
 							case '3':
 								playerLocation = "Atrium";
@@ -176,6 +175,8 @@ public class javaGame
 				{
 					while (playerLocation == "Arena")
 					{
+						while(playerHealth > 0 && enemyHealth >0)
+						{
 						System.out.println("You are standing at the enterance to the Arena");
 						System.out.println("Prepare your self and enter.");
 						System.out.println("What would you like to do?:");
@@ -192,18 +193,207 @@ public class javaGame
 								playerLocation = "Atrium";
 								break;
 							case '2':
+								
 								if(fight == 1)
 								{
 									System.out.println("You enter the Arena and see a small goblin standing opposite you.");
-								
-									Enemy enemy = new Enemy("Goblin", 1);
-									EnemyClass enemyClass = new EnemyClass("Bandit");
 									enemySkillOne = enemyClass.SetEnemySkillOne();
 									enemySkillTwo = enemyClass.SetEnemySkillTwo();
 									enemySkillThree = enemyClass.SetEnemySkillThree();
 									enemyArmor = enemy.SetEnemyArmor(2);
+									enemyMaxHealth= enemy.SetEnemyMaxHealth(30,0);
 									enemyHealth = enemy.SetEnemyHealth(25,0);
-									Action attack = new Action();
+									// playerLocation = "Atrium";
+									while(playerHealth > 0 && enemyHealth >0)
+									{
+										if(playersTurn == true)
+										{
+											System.out.println("It is your turn.");
+											System.out.println("Whatwould you like to do?");
+											System.out.println("1: " + skillOne);
+											System.out.println("2: " + skillTwo);
+											System.out.println("3: " + skillThree);
+											playerChoice = scanner.next().charAt(0);
+											switch (playerChoice) 
+											{
+												case '0':
+													player.PrintStatus();
+													playerClass.PrintClass();
+													enemy.PrintEnemyStatus();
+													enemyClass.PrintEnemyClass();
+													break;
+												case '1':
+													enemyOldHealth = enemyHealth;
+													healthChange = attack.Attack(skillOne);
+													enemyHealth = enemy.SetEnemyHealth(enemyOldHealth,healthChange);
+													System.out.println("You have hit the enemy for " + healthChange);
+													System.out.println("Enemy HP:" + enemyHealth);
+													playersTurn = false;
+													break;
+												case '2':
+													enemyOldHealth = enemyHealth;
+													healthChange = attack.Attack(skillTwo);
+													enemyHealth = enemy.SetEnemyHealth(enemyOldHealth,healthChange);
+													System.out.println("You have hit the enemy for " + healthChange);
+													System.out.println("Enemy HP:" + enemyHealth);
+													playersTurn = false;
+													break;
+												case '3':
+													enemyOldHealth = enemyHealth;
+													healthChange = attack.Attack(skillThree);
+													enemyHealth = enemy.SetEnemyHealth(enemyOldHealth,healthChange);
+													System.out.println("You have hit the enemy for " + healthChange);
+													System.out.println("Enemy HP:" + enemyHealth);
+													playersTurn = false;
+													break;
+												default:
+													break;
+											}
+										}	
+										else if(playersTurn == false)
+										{
+											System.out.println("It is the enemies turn.");
+											enemyChoice = ThreadLocalRandom.current().nextInt(1,4);
+											switch (enemyChoice) 
+											{
+												case 1:
+													playerOldHealth = playerHealth;
+													healthChange = enemyAttack.Attack(enemySkillOne);
+													playerHealth = player.SetHealth(playerOldHealth,healthChange);
+													System.out.println("You have been hit for " + healthChange);
+													System.out.println("HP: " + playerHealth);
+													playersTurn = true;
+													break;
+												case 2:
+													playerOldHealth = playerHealth;
+													healthChange = enemyAttack.Attack(enemySkillTwo);
+													playerHealth = player.SetHealth(playerOldHealth,healthChange);
+													System.out.println("You have been hit for " + healthChange);
+													System.out.println("HP: " + playerHealth);
+													playersTurn = true;
+													break;
+												case 3:
+													playerOldHealth = playerHealth;
+													healthChange = enemyAttack.Attack(enemySkillThree);
+													playerHealth = player.SetHealth(playerOldHealth,healthChange);
+													System.out.println("You have been hit for " + healthChange);
+													System.out.println("HP: " + playerHealth);
+													playersTurn = true;
+													break;
+												default:
+													playersTurn = true;
+													break;
+											}
+										}
+									}
+								}
+								else if(fight == 2)
+								{
+									System.out.println("As you enter the arena a Fighter begins to charge you.");
+									setEnemyClass = enemyClass.NewEnemyClass("Fighter");
+									enemySkillOne = enemyClass.SetEnemySkillOne();
+									enemySkillTwo = enemyClass.SetEnemySkillTwo();
+									enemySkillThree = enemyClass.SetEnemySkillThree();
+									enemyArmor = enemy.SetEnemyArmor(4);
+									enemyMaxHealth= enemy.SetEnemyMaxHealth(30,0);
+									enemyHealth = enemy.SetEnemyHealth(30,0);
+									while(playerHealth > 0 && enemyHealth >0)
+									{
+										if(playersTurn == true)
+										{
+											System.out.println("It is your turn.");
+											System.out.println("Whatwould you like to do?");
+											System.out.println("1: " + skillOne);
+											System.out.println("2: " + skillTwo);
+											System.out.println("3: " + skillThree);
+											playerChoice = scanner.next().charAt(0);
+											switch (playerChoice) 
+											{
+												case '0':
+													player.PrintStatus();
+													playerClass.PrintClass();
+													enemy.PrintEnemyStatus();
+													enemyClass.PrintEnemyClass();
+													break;
+												case '1':
+													enemyOldHealth = enemyHealth;
+													healthChange = attack.Attack(skillOne);
+													enemyHealth = enemy.SetEnemyHealth(enemyOldHealth,healthChange);
+													System.out.println("You have hit the enemy for " + healthChange);
+													System.out.println("Enemy HP:" + enemyHealth);
+													playersTurn = false;
+													break;
+												case '2':
+													enemyOldHealth = enemyHealth;
+													healthChange = attack.Attack(skillTwo);
+													enemyHealth = enemy.SetEnemyHealth(enemyOldHealth,healthChange);
+													System.out.println("You have hit the enemy for " + healthChange);
+													System.out.println("Enemy HP:" + enemyHealth);
+													playersTurn = false;
+													break;
+												case '3':
+													enemyOldHealth = enemyHealth;
+													healthChange = attack.Attack(skillThree);
+													enemyHealth = enemy.SetEnemyHealth(enemyOldHealth,healthChange);
+													System.out.println("You have hit the enemy for " + healthChange);
+													System.out.println("Enemy HP:" + enemyHealth);
+													playersTurn = false;
+													break;
+												default:
+													break;
+											}
+										}	
+										else if(playersTurn == false)
+										{
+											System.out.println("It is the enemies turn.");
+											enemyChoice = ThreadLocalRandom.current().nextInt(1,4);
+											switch (enemyChoice) 
+											{
+												case 1:
+													playerOldHealth = playerHealth;
+													healthChange = enemyAttack.Attack(enemySkillOne);
+													playerHealth = player.SetHealth(playerOldHealth,healthChange);
+													System.out.println("You have been hit for " + healthChange);
+													System.out.println("HP: " + playerHealth);
+													playersTurn = true;
+													break;
+												case 2:
+													playerOldHealth = playerHealth;
+													healthChange = enemyAttack.Attack(enemySkillTwo);
+													playerHealth = player.SetHealth(playerOldHealth,healthChange);
+													System.out.println("You have been hit for " + healthChange);
+													System.out.println("HP: " + playerHealth);
+													playersTurn = true;
+													break;
+												case 3:
+													playerOldHealth = playerHealth;
+													healthChange = enemyAttack.Attack(enemySkillThree);
+													playerHealth = player.SetHealth(playerOldHealth,healthChange);
+													System.out.println("You have been hit for " + healthChange);
+													System.out.println("HP: " + playerHealth);
+													playersTurn = true;
+													break;
+												default:
+													playersTurn = true;
+													break;
+											}
+										}
+									}
+								}
+								
+								else if(fight >= 3)
+								{
+									System.out.println("As you enter the arena a Fighter begins to charge you.");
+												
+									setEnemyClass = enemyClass.NewEnemyClass("Cleric");
+									enemySkillOne = enemyClass.SetEnemySkillOne();
+									enemySkillTwo = enemyClass.SetEnemySkillTwo();
+									enemySkillThree = enemyClass.SetEnemySkillThree();
+									enemyArmor = enemy.SetEnemyArmor(2);
+									enemyMaxHealth= enemy.SetEnemyMaxHealth(30,0);
+									enemyMaxHealth= enemy.SetEnemyMaxHealth(30,0);
+									enemyHealth = enemy.SetEnemyHealth(30,0);
+												
 									playerLocation = "Atrium";
 									while(playerHealth > 0 && enemyHealth >0)
 									{
@@ -255,7 +445,7 @@ public class javaGame
 										{
 											System.out.println("It is the enemies turn.");
 											enemyChoice = ThreadLocalRandom.current().nextInt(1,4);
-											EnemyAction enemyAttack = new EnemyAction();
+														
 											switch (enemyChoice) 
 											{
 												case 1:
@@ -285,32 +475,43 @@ public class javaGame
 												default:
 													playersTurn = true;
 													break;
+													}
+												}
 											}
 										}
-									}
-								//fight += 1;
-								playerHealth = playerMaxHealth;
+										break;
+									default:
+										break;
 								}
+								if(playerHealth >=0)
+								{
+									fight += 1;
+									playerHealth = playerMaxHealth;
+									playerLocation = "Atrium";
+									enemyHealth = 30;
+								}
+							}
 						}
 					} 
 				}
-			}
-			System.out.println("You have died, would you like to play again?");
-			System.out.println("1: Yes");
-			System.out.println("2: No");
-			playerChoice = scanner.next().charAt(0);
-			switch (playerChoice) 
-			{
-				case '1':
+				System.out.println("You have died, would you like to play again?");
+				System.out.println("1: Yes");
+				System.out.println("2: No");
+				playerChoice = scanner.next().charAt(0);
+				switch (playerChoice) 
+				{
+					case '1':
 						System.out.println("Good Luck!");
-					break;
-				case '2':
+						playerHealth = playerMaxHealth;
+						break;
+					case '2':
 						System.out.println("Thank you for playing.");
 						System.exit(1);
 					break;
 			
-			}		
+				}	
+			}
 		}	
 	}
-}
+
 

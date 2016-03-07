@@ -18,7 +18,11 @@ public class EnemyClass {
 		enemyClass = EnemyClass;
 		return enemyClass;
 	}
-	
+	public String ChangeEnemyClass(String NewClass)
+	{
+		enemyClass = NewClass;
+		return enemyClass;
+	}
 	public String SetEnemySkillOne()
 	{
 		if(enemyClass == "Fighter")
