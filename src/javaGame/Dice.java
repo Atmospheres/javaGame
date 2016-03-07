@@ -7,7 +7,7 @@ public class Dice{
 
 	public int DFour()
 	{
-		int dFour = ThreadLocalRandom.current().nextInt(1,7);
+		int dFour = ThreadLocalRandom.current().nextInt(1,5);
 		return dFour;
 	}
 	public int DSix()
@@ -17,12 +17,12 @@ public class Dice{
 	}
 	public int DEight()
 	{
-		int dEight = ThreadLocalRandom.current().nextInt(1,7);
+		int dEight = ThreadLocalRandom.current().nextInt(1,9);
 		return dEight;
 	}
 	public int DTen()
 	{
-		int dTen = ThreadLocalRandom.current().nextInt(1,7);
+		int dTen = ThreadLocalRandom.current().nextInt(1,11);
 		return dTen;
 	}
 }

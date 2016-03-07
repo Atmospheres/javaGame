@@ -203,7 +203,6 @@ public class javaGame
 									enemyArmor = enemy.SetEnemyArmor(2);
 									enemyMaxHealth= enemy.SetEnemyMaxHealth(30,0);
 									enemyHealth = enemy.SetEnemyHealth(25,0);
-									// playerLocation = "Atrium";
 									while(playerHealth > 0 && enemyHealth >0)
 									{
 										if(playersTurn == true)
@@ -390,7 +389,6 @@ public class javaGame
 									enemySkillTwo = enemyClass.SetEnemySkillTwo();
 									enemySkillThree = enemyClass.SetEnemySkillThree();
 									enemyArmor = enemy.SetEnemyArmor(2);
-									enemyMaxHealth= enemy.SetEnemyMaxHealth(30,0);
 									enemyMaxHealth= enemy.SetEnemyMaxHealth(30,0);
 									enemyHealth = enemy.SetEnemyHealth(30,0);
 												
